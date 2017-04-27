@@ -1,0 +1,71 @@
+apply plugin: 'org.kordamp.markdown.convert'
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+    }
+    dependencies {
+        classpath 'org.kordamp:markdown-gradle-plugin:1.0.0'
+    }
+}
+
+markdownToHtml{
+	sourceDir  new File("presentation")
+	outputDir  new File("${project.buildDir}/slides")
+}
+
+task build {
+}
+
+task clean {
+	doFirst{
+		 delete "${project.buildDir}"
+	}
+}
+
+task appendFooters{
+	doFirst{
+		FileTree tree = fileTree("${project.buildDir}/slides").include('**/*.html')
+			tree.each {File file ->
+				file.append(project.property("footer"))
+			}
+	}
+}
+
+task addFooter{
+	doFirst{
+			new File("${project.buildDir}/slides/${project.ext.slide_name}").append(project.property("footer"))
+	}
+}
+
+// Define slides tasks
+fileTree("presentation").visit {FileVisitDetails details ->
+	String name = details.file.name.take(details.file.name.lastIndexOf('.'))
+	task "${name}" {
+		description "Opens ${name} in default browser"
+		group "Slides"
+		doFirst{
+			if("${details.file.name}".endsWith(".md")){
+				java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${name}.html").toURI()
+			}
+			else{
+				java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${details.file.name}").toURI()
+			}
+		}
+		doLast{
+			project.ext.slide_name = "${name}.html"
+		}
+		dependsOn markdownToHtml
+		//finalizedBy appendFooters
+	}
+	build.dependsOn "${name}"
+}
+
+task questions{
+	doFirst{
+		println "Any questions?"
+	}
+}
+
+build.finalizedBy questions

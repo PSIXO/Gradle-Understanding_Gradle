@@ -1,0 +1,4 @@
+# Basic commands
+
+*	Without plug-ins gradle defines just basic commands
+*
