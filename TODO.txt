@@ -1,9 +1,8 @@
-Important files and overithing them from console
-Gradle deamon
-
+#Gradle deamon
 #Dependencies
 #DSL basics
 #Power of groovy
 
-Using plugins
-Android plugin
+Examples
+
+Q&A
