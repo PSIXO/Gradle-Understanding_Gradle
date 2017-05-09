@@ -14,3 +14,5 @@ No need to install it
 **_unzip gradle-3.5-bin.zip_**
 
 *	And then run **_gradle-3.5-bin\bin\gradle_**
+
+For up to date version call [releases api](https://services.gradle.org/versions/current)
