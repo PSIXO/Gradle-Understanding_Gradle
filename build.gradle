@@ -24,47 +24,45 @@ task clean {
 	}
 }
 
-task appendFooters{
-	doFirst{
-		FileTree tree = fileTree("${project.buildDir}/slides").include('**/*.html')
-			tree.each {File file ->
-				file.append(project.property("footer"))
-			}
-	}
-}
-
 task addFooter{
 	doFirst{
-			new File("${project.buildDir}/slides/${project.ext.slide_name}").append(project.property("footer"))
+			String footerText = new File(project.property("footer")).getText('UTF-8')
+			footerText = footerText.replace("*NUMBER*","${project.ext.slide_name}")
+			new File("${project.buildDir}/slides/${project.ext.slide_name}").append(footerText)
+			println "ADDING FOOTER TO : " + "${project.ext.slide_name}"
 	}
 }
 
 // Define slides tasks
 fileTree("presentation").visit {FileVisitDetails details ->
 	String name = details.file.name.take(details.file.name.lastIndexOf('.'))
-	task "${name}" {
-		description "Opens ${name} in default browser"
-		group "Slides"
-		doFirst{
-			if("${details.file.name}".endsWith(".md")){
-				java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${name}.html").toURI()
+	if("${details.file.name}".endsWith(".md") || "${details.file.name}".endsWith(".svg")){
+		task "${name}" {
+			description "Opens ${name} in default browser"
+			group "Slides"
+			doFirst{
+				if("${details.file.name}".endsWith(".md")){
+					java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${name}.html").toURI()
+				}
+				else if("${details.file.name}".endsWith(".svg")){
+					java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${details.file.name}").toURI()
+				}
 			}
-			else{
-				java.awt.Desktop.desktop.browse new File("${project.buildDir}/slides/${details.file.name}").toURI()
+			doLast{
+				project.ext.slide_name = "${name}.html"
+			}
+			dependsOn markdownToHtml
+			if(project.hasProperty("footer")){
+				addFooter.mustRunAfter "${name}"
 			}
 		}
-		doLast{
-			project.ext.slide_name = "${name}.html"
-		}
-		dependsOn markdownToHtml
-		//finalizedBy appendFooters
+		build.dependsOn "${name}"
 	}
-	build.dependsOn "${name}"
 }
 
 task questions{
 	doFirst{
-		println "Any questions?"
+		println "Any questions ?"
 	}
 }
 

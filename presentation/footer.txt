@@ -1,0 +1,26 @@
+<div style="position: fixed;bottom: 10pt;left: 20pt; width:100%; border-top: 2px dotted #000;">
+  *NUMBER*
+</div>
+<footer>
+  <img src="icon.png" alt="some_text" style="width:50pt;height:15pt;">
+</footer>
+<style>
+  h1 {
+	height: 50pt;
+	font: 36pt "Arial Narrow", sans-serif;
+	border-bottom: 2px dotted #000;
+	text-decoration: none;
+	letter-spacing: 4px;
+	text-align: center;
+  }
+  li {
+	font: 18pt "Arial Regular", sans-serif;
+	text-align: center;
+	list-style-position: inside
+  }
+  footer {
+	position: fixed;
+	bottom: 5pt;
+	right: 20pt;
+  }
+</style>
