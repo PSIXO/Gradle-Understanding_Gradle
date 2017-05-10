@@ -1,8 +1,0 @@
-#Gradle deamon
-#Dependencies
-#DSL basics
-#Power of groovy
-
-Examples
-
-Q&A
